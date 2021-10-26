@@ -1,19 +1,19 @@
-package com.insta.githublistapi.detail
+package com.insta.githublistapi.profileuser
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.insta.githublistapi.api.RetrofitClient
-import com.insta.githublistapi.data.model.UserResponse
-import kotlinx.coroutines.launch
+import com.insta.githublistapi.serviceapi.RetrofitClient
+import com.insta.githublistapi.model.UserResponse
 import retrofit2.Call
 import retrofit2.Response
 
-class RepositoriesUserViewModel : ViewModel() {
+class ProfileViewModel : ViewModel() {
 
-    val user = MutableLiveData<UserResponse>()
+    private val _profileUser = MutableLiveData<UserResponse>()
+    val profileUser: LiveData<UserResponse> = _profileUser
+
 
     fun setUserDetail(username: String) {
         RetrofitClient.userService
@@ -23,7 +23,7 @@ class RepositoriesUserViewModel : ViewModel() {
                     call: Call<UserResponse>,
                     response: Response<UserResponse>
                 ) {
-                    user.postValue(response.body())
+                    _profileUser.postValue(response.body())
                 }
 
                 override fun onFailure(call: Call<UserResponse>, t: Throwable) {

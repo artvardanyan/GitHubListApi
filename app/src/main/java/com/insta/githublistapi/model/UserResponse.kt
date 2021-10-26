@@ -1,4 +1,4 @@
-package com.insta.githublistapi.data.model
+package com.insta.githublistapi.model
 
 data class UserResponse(
     val login: String,

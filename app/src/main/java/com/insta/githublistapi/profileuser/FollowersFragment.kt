@@ -1,6 +1,5 @@
-package com.insta.githublistapi.detail
+package com.insta.githublistapi.profileuser
 
-import android.app.FragmentBreadCrumbs
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater

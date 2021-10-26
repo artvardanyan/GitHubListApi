@@ -1,7 +1,7 @@
-package com.insta.githublistapi.api
+package com.insta.githublistapi.serviceapi
 
-import com.insta.githublistapi.data.model.UserResponse
-import com.insta.githublistapi.data.model.UserListResponse
+import com.insta.githublistapi.model.UserResponse
+import com.insta.githublistapi.model.UserListResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path

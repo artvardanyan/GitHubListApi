@@ -1,11 +1,12 @@
-package com.insta.githublistapi
+package com.insta.githublistapi.userlist
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.insta.githublistapi.data.model.UserResponse
+import com.insta.githublistapi.clickListener.OnItemClickListener
+import com.insta.githublistapi.model.UserResponse
 import com.insta.githublistapi.databinding.ItemUserBinding
 
 class UserAdapter : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {

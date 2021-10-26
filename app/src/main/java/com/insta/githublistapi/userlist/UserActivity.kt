@@ -1,4 +1,4 @@
-package com.insta.githublistapi
+package com.insta.githublistapi.userlist
 
 import android.content.Context
 import android.content.Intent
@@ -9,28 +9,29 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.insta.githublistapi.data.model.UserResponse
-import com.insta.githublistapi.databinding.ActivityMainBinding
-import com.insta.githublistapi.detail.RepositoriesActivity
+import com.insta.githublistapi.clickListener.OnItemClickListener
+import com.insta.githublistapi.model.UserResponse
+import com.insta.githublistapi.databinding.ActivityUserBinding
+import com.insta.githublistapi.profileuser.ProfileActivity
 
 
-class MainActivity : AppCompatActivity() {
+class UserActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
-    private lateinit var viewModel: MainViewModel
+    private lateinit var binding: ActivityUserBinding
+    private lateinit var viewModel: UserViewModel
     private val adapter: UserAdapter = UserAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityUserBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(
-            MainViewModel::class.java
+            UserViewModel::class.java
         )
 
         binding.apply {
-            rvUser.layoutManager = LinearLayoutManager(this@MainActivity)
+            rvUser.layoutManager = LinearLayoutManager(this@UserActivity)
             rvUser.adapter = adapter
             btnSearch.setOnClickListener {
                 searchUser()
@@ -48,8 +49,8 @@ class MainActivity : AppCompatActivity() {
 
         adapter.onItemClickListener = object : OnItemClickListener {
             override fun onItemClick(item: UserResponse) {
-                Intent(this@MainActivity, RepositoriesActivity::class.java).also {
-                    it.putExtra(RepositoriesActivity.EXTRA_USERNAME, item.login)
+                Intent(this@UserActivity, ProfileActivity::class.java).also {
+                    it.putExtra(ProfileActivity.EXTRA_USERNAME, item.login)
                     startActivity(it)
                 }
             }
