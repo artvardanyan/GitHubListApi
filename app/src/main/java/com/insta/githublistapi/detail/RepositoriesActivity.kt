@@ -3,24 +3,19 @@ package com.insta.githublistapi.detail
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.insta.githublistapi.databinding.ActivityRepositoriesBinding
 
-class Repositories : AppCompatActivity() {
+class RepositoriesActivity : AppCompatActivity() {
 
-    companion object {
-        const val EXTRA_USERNAME = "extra_username"
-    }
-
-    private var binding: ActivityRepositoriesBinding? = null
-    private var viewModel : RepositoriesUserViewModel? = null
+    private lateinit var binding: ActivityRepositoriesBinding
+    private lateinit var viewModel : RepositoriesUserViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRepositoriesBinding.inflate(layoutInflater)
-        setContentView(binding?.root)
+        setContentView(binding.root)
 
         val username = intent.getStringExtra(EXTRA_USERNAME)
 
@@ -28,18 +23,18 @@ class Repositories : AppCompatActivity() {
             RepositoriesUserViewModel::class.java
         )
 
-        if (username != null) {
-            viewModel?.setUserDetail(username)
+        username?.let {
+            viewModel.setUserDetail(it)
         }
 
-        viewModel?.getUserDetail()?.observe(this, {
-            if (it != null) {
-                binding?.apply {
+        viewModel.user.observe(this, { user ->
+            user?.let {
+                binding.apply {
                     tvName.text = it.name
                     tvUsername.text = it.login
                     tvFollowers.text = "${it.followers} Followers"
                     tvFollowing.text = "${it.following} Following"
-                    Glide.with(this@Repositories)
+                    Glide.with(this@RepositoriesActivity)
                         .load(it.avatar_url)
                         .transition(DrawableTransitionOptions.withCrossFade())
                         .centerCrop()
@@ -50,10 +45,14 @@ class Repositories : AppCompatActivity() {
 
         val sectionPagerAdapter = SectionPagerAdapter(this, supportFragmentManager)
 
-        binding?.apply {
+        binding.apply {
             viewPager.adapter = sectionPagerAdapter
             tabs.setupWithViewPager(viewPager)
         }
 
+    }
+
+    companion object {
+        const val EXTRA_USERNAME = "extra_username"
     }
 }

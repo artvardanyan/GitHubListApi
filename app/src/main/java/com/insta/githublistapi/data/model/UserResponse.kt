@@ -1,11 +1,12 @@
 package com.insta.githublistapi.data.model
 
-import android.os.Parcelable
-import com.google.gson.annotations.SerializedName
-import kotlinx.parcelize.Parcelize
-
-@Parcelize
 data class UserResponse(
-    @SerializedName("items")
-    val items: ArrayList<User>
-) : Parcelable
+    val login: String,
+    val id: Int,
+    val avatar_url: String,
+    val followers_url: String,
+    val following_url: String,
+    val name: String,
+    val following: Int,
+    val followers: Int
+)

@@ -5,46 +5,18 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.insta.githublistapi.data.model.User
+import com.insta.githublistapi.data.model.UserResponse
 import com.insta.githublistapi.databinding.ItemUserBinding
 
 class UserAdapter : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
-    private val list = ArrayList<User>()
-    private var mOnItemListener: OnItemListener? = null
+    private val list = arrayListOf<UserResponse>()
+    var onItemClickListener: OnItemClickListener? = null
 
-    fun setOnItemClickListener(listener: OnItemListener) {
-        this.mOnItemListener = listener
-    }
-
-    fun setList(users: ArrayList<User>) {
+    fun updateData(users: List<UserResponse>) {
         list.clear()
         list.addAll(users)
         notifyDataSetChanged()
-    }
-
-    inner class UserViewHolder(private val binding: ItemUserBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(user: User) {
-
-            binding.root.setOnClickListener {
-                mOnItemListener?.onItemClick(user)
-            }
-
-            binding.apply {
-                Glide.with(itemView)
-                    .load(user.avatar_url)
-                    .transition(DrawableTransitionOptions.withCrossFade())
-                    .centerCrop()
-                    .into(ivUser)
-                tvUsername.text = user.login
-            }
-        }
-
-        init {
-            itemView.setOnClickListener {
-
-            }
-        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
@@ -58,8 +30,28 @@ class UserAdapter : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
     override fun getItemCount(): Int = list.size
 
-    interface OnItemListener {
-        fun onItemClick(data: User)
-    }
+    inner class UserViewHolder(private val binding: ItemUserBinding) : RecyclerView.ViewHolder(binding.root) {
 
+        private var data: UserResponse? = null
+
+        init {
+            binding.root.setOnClickListener {
+                data?.let { user ->
+                    onItemClickListener?.onItemClick(user)
+                }
+            }
+        }
+
+        fun bind(user: UserResponse) {
+            data = user
+            binding.apply {
+                Glide.with(itemView)
+                    .load(user.avatar_url)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .centerCrop()
+                    .into(ivUser)
+                tvUsername.text = user.login
+            }
+        }
+    }
 }

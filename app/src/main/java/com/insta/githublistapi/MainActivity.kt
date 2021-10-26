@@ -1,79 +1,81 @@
 package com.insta.githublistapi
 
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.insta.githublistapi.data.model.User
+import com.insta.githublistapi.data.model.UserResponse
 import com.insta.githublistapi.databinding.ActivityMainBinding
-import com.insta.githublistapi.detail.Repositories
+import com.insta.githublistapi.detail.RepositoriesActivity
+
 
 class MainActivity : AppCompatActivity() {
 
-    private var binding: ActivityMainBinding? = null
-    private var viewModel: MainViewModel? = null
-    private var adapter: UserAdapter? = null
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var viewModel: MainViewModel
+    private val adapter: UserAdapter = UserAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding?.root)
+        setContentView(binding.root)
 
         viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(
             MainViewModel::class.java
         )
 
-        viewModel?.getSearchUser()?.observe(this, {
-            if (it != null) {
-                adapter?.setList(it)
-                showLoading(false)
-            }
-        })
-
-        adapter = UserAdapter()
-        adapter?.notifyDataSetChanged()
-
-        adapter?.setOnItemClickListener(object : UserAdapter.OnItemListener {
-            override fun onItemClick(data: User) {
-                Intent(this@MainActivity, Repositories::class.java).also {
-                    it.putExtra(Repositories.EXTRA_USERNAME, data.login)
-                    startActivity(it)
-                }
-            }
-        })
-
-        binding?.apply {
+        binding.apply {
             rvUser.layoutManager = LinearLayoutManager(this@MainActivity)
-            rvUser.setHasFixedSize(true)
             rvUser.adapter = adapter
             btnSearch.setOnClickListener {
                 searchUser()
             }
-            etQuery.setOnKeyListener { v, keyCode, event ->
-                if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                    searchUser()
-                    return@setOnKeyListener true
+            errorText.visibility = View.GONE
+        }
+
+        viewModel.listUsers.observe(this, { users ->
+            users?.let {
+                adapter.updateData(it)
+                binding.errorText.visibility = View.GONE
+                showLoading(false)
+            }
+        })
+
+        adapter.onItemClickListener = object : OnItemClickListener {
+            override fun onItemClick(item: UserResponse) {
+                Intent(this@MainActivity, RepositoriesActivity::class.java).also {
+                    it.putExtra(RepositoriesActivity.EXTRA_USERNAME, item.login)
+                    startActivity(it)
                 }
-                return@setOnKeyListener false
             }
         }
+
     }
 
     private fun searchUser() {
-        val query = binding?.etQuery?.text.toString()
+        val query = binding.etQuery.text.toString()
         if (query.isEmpty()) return
-        showLoading(true)
-        viewModel?.setSearchUsers(query)
+        val isConnected = isNetworkConnect()
+        binding.errorText.isVisible = !isConnected
+        if (isConnected) {
+            showLoading(true)
+            viewModel.searchUsers(query)
+        }
     }
 
     private fun showLoading(state: Boolean) {
-        if (state) {
-            binding?.progressBar?.visibility = View.VISIBLE
-        } else {
-            binding?.progressBar?.visibility = View.GONE
-        }
+        binding.progressBar.isVisible = state
     }
+
+    private fun isNetworkConnect(): Boolean {
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val netinfo = cm.activeNetworkInfo
+        return netinfo != null && netinfo.isConnected
+    }
+
 }
