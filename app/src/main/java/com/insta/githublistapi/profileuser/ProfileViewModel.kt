@@ -12,8 +12,8 @@ import retrofit2.Response
 class ProfileViewModel : ViewModel() {
 
     private val _profileUser = MutableLiveData<UserResponse>()
-    val profileUser: LiveData<UserResponse> = _profileUser
-
+    val profileUser: LiveData<UserResponse>
+        get() = _profileUser
 
     fun setUserDetail(username: String) {
         RetrofitClient.userService
