@@ -1,13 +1,12 @@
 package com.insta.githublistapi.profileuser
 
 import android.content.Context
-import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.insta.githublistapi.R
 
-class FollowerPagerAdapter(private val mCtx: Context, fm: FragmentManager)
+class FollowerPagerAdapter(private val ctx: Context, fm: FragmentManager)
     : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     private val TAB_TITLES = intArrayOf(R.string.tab_1, R.string.tab_2)
@@ -24,6 +23,6 @@ class FollowerPagerAdapter(private val mCtx: Context, fm: FragmentManager)
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
-        return mCtx.resources.getString(TAB_TITLES[position])
+        return ctx.resources.getString(TAB_TITLES[position])
     }
 }

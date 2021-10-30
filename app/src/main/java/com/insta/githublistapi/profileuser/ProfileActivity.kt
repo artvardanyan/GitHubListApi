@@ -24,10 +24,10 @@ class ProfileActivity : AppCompatActivity() {
         )
 
         username?.let {
-            viewModel.setUserDetail(it)
+            viewModel.getProfileByUser(it)
         }
 
-        viewModel.profileUser.observe(this, { user ->
+        viewModel.profileUserLiveData.observe(this, { user ->
             user?.let {
                 binding.apply {
                     tvName.text = it.name

@@ -14,7 +14,6 @@ import com.insta.githublistapi.model.UserResponse
 import com.insta.githublistapi.databinding.ActivityUserBinding
 import com.insta.githublistapi.profileuser.ProfileActivity
 
-
 class UserActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityUserBinding
@@ -55,7 +54,6 @@ class UserActivity : AppCompatActivity() {
                 }
             }
         }
-
     }
 
     private fun searchUser() {
@@ -65,7 +63,7 @@ class UserActivity : AppCompatActivity() {
         binding.errorText.isVisible = !isConnected
         if (isConnected) {
             showLoading(true)
-            viewModel.searchUsers(query)
+            viewModel.getSearchByUsers(query)
         }
     }
 

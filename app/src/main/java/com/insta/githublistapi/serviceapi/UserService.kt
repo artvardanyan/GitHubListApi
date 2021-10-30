@@ -9,10 +9,10 @@ import retrofit2.http.Query
 
 interface UserService {
     @GET("search/users")
-    fun searchUsers(@Query("q") query: String): Call<UserListResponse>
+    suspend fun searchUsers(@Query("q") query: String): UserListResponse
 
     @GET("users/{username}")
-    fun getUserByName(@Path("username") username: String): Call<UserResponse>
+    suspend fun getUserByName(@Path("username") username: String): UserResponse
 
     @GET("user/{username}/followers")
     fun getFollowers(@Path("username") username: String): Call<ArrayList<UserResponse>>
